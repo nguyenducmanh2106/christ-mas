@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Google maps</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <style>
+        #map-canvas{
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+<div id="map-canvas">
+
+</div>
+
+<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrusqczEYzqSWW9Kaw_hNj6JB6ftBpNz8&callback=initMap">
+</script>
+<script>
+
+    function initMap() {
+        var myLatLng = { lat: 20.929456176950257, lng: 106.31395702028685 };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'), {
+            zoom: 11,
+            center: myLatLng
+        });
+
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Hello World!'
+        });
+
+           // shape id,point id,longitude,latitude
+         
+
+
+var polygonArea=[{lng:106.29095439577513,lat:20.936190109122087},
+{lng:106.32082347536497,lat:20.95254268369124},
+{lng:106.33627299929076,lat:20.94933643732216},
+{lng:106.33627299929076,lat:20.9317008546447},
+{lng:106.32631663942747,lat:20.920477129869337},
+{lng:106.29576091432982,lat:20.882630951726284},
+{lng:106.29095439577513,lat:20.936190109122087}]
+// var area=new google.maps.Polygon({
+//     paths:polygonArea,
+//     strokeColor:'#FF0000',
+//     strokeOpacity:0.8,
+//     fillColor:'#FF0000',
+//     fillOpacity:0.35
+// })
+var area=new google.maps.Polygon({
+    paths:polygonArea,
+    strokeColor:'#dbb0270a',
+    strokeOpacity:0.8,
+    fillColor:'#dbb0270a',
+    fillOpacity:0.35
+})
+area.setMap(map);
+google.maps.event.addListener(area,"mouseover",function(){
+//   this.setMap(null);
+//   area.setMap(map);
+  this.setOptions({fillColor: "#FF0000"});
+}); 
+
+google.maps.event.addListener(area,"mouseout",function(){
+//   this.setMap(null);
+//   area.setMap(map);
+this.setOptions({fillColor: "#dbb0270a"});
+});
+    }
+
+
+
+ 
+</script>
+<script>
+    $(document).ready(function(){
+      
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Datepicker - Default functionality</title>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  <style>
+    .wrap {
+      width: 70vw;
+      margin: 20px auto;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    #header {
+      background: #eee;
+
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    .item {
+      margin-top: 15px;
+      background: #eee;
+      padding: 20px;
+    }
+
+    #btnThem {
+      position: fixed;
+      right: 13vw;
+      top: 50vh;
+    }
+
+    .cauhoi {
+      position: relative;
+    }
+
+    .addTieuChi {
+      position: absolute;
+      left: 0;
+    }
+
+    input[type='text'] {
+      border: none;
+      border-bottom: 1px solid;
+      background: none;
+    }
+
+    input[type='text']:focus {
+      border: none
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class='container'>
+    <a href='javascript:void(0)' onclick="AddQuestion()" id='btnThem'>
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class='wrap'>
+      <div id='header'>
+        <h1 class='title'>Tiêu đề khảo sát</h1>
+        <div class='description'>
+          KHảo sát lần 1 <i class="fa fa-spinner fa-spin fa-3x "></i>
+        </div>
+      </div>
+      <div>
+        <div id='content'>
+
+        </div>
+      </div>
+      <div class='row'>
+        <button id="btnSave">
+          Lưu
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    var arrAdd = []
+    var arrTemp = []
+    $(document).ready(function () {
+      AddQuestion();
+      kieuNhap();
+      $('#btnSave').off('click').on('click', function () {
+        if (confirm("Bạn có muốn lưu không?")) {
+          addArr();
+          console.log(arrAdd)
+        }
+      })
+    })
+    function addArr() {
+      $('.item').each(function () {
+        var cauhoi = $(this).find('.txtName').val();
+        var kieunhap = $(this).find('.kieunhap').val();
+        var thutu=$(this).find('.txtOrder').val();
+        if (kieunhap == 2) {
+          var obj = {
+            NOIDUNG: cauhoi,
+            KIEUNHAP: kieunhap,
+            SAPXEP:thutu,
+            TIEUCHI: $(this).find('.tieuchi').val()
+          };
+          arrTemp.push(obj)
+        }
+        else {
+          var arrTieuChi = []
+          var TieuChis = $(this).find('.cauhoi input[type=text]').each(function () {
+            arrTieuChi.push($(this).val());
+          });
+          var obj = {
+            NOIDUNG: cauhoi,
+            KIEUNHAP: kieunhap,
+            SAPXEP:thutu,
+            TIEUCHI: arrTieuChi
+          };
+          arrTemp.push(obj)
+        }
+      });
+
+      arrAdd = {
+        TieuDe: "xin chao",
+        arrCauHois: arrTemp
+      }
+
+    }
+    function kieuNhap() {
+      var textarea = `<textarea class='form-control tieuchi'></textarea>`;
+      var tracnghiem = `<a href='javascript:void(0)' onclick="AddTieuChi(this)"  class='addTieuChi'>
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                </a>
+                <p><i class="fa fa-circle-thin" aria-hidden="true"></i><input type="text" /><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>`;
+      var hopkiem = `<a href='javascript:void(0)' onclick="AddTieuChi(this)" class='addTieuChi'>
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                </a>
+      <p><i class="fa fa-square-o" aria-hidden="true"></i></i><input type="text" /><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>`;
+      var menutha = `<a href='javascript:void(0)' onclick="AddTieuChi(this)" class='addTieuChi'>
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                </a>
+      <p></i><input type="text" /><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>`;
+      $('.kieunhap').each(function () {
+        $(this).on('change', function () {
+          var value = $(this).val()
+          var abss = $(this).closest('.item').find('.cauhoi')
+          if (value == 2) {
+            abss.html(textarea)
+          }
+          else if (value == 1) {
+            abss.html(tracnghiem)
+          }
+          else if (value == 3) {
+            abss.html(hopkiem)
+          }
+          else if (value == 4) {
+            abss.html(menutha)
+          }
+        })
+      })
+
+    }
+    function AddTieuChi(input) {
+      var tracnghiem = ` <p><i class="fa fa-circle-thin" aria-hidden="true"></i><input type="text" class='tieuchi' /><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>`;
+      var hopkiem = `<p><i class="fa fa-square-o" aria-hidden="true"></i><input type="text" class='tieuchi' /><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>`;
+      var menutha = `<p></i><input type="text" class='tieuchi'/><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>`;
+      var luachon = $(input).closest($('.item')).find('.kieunhap').val()
+      var tieuchi = $(input).closest('.cauhoi')
+      if (luachon == 1) {
+        tieuchi.append(tracnghiem)
+      }
+      else if (luachon == 3) {
+        tieuchi.append(hopkiem)
+      }
+      else if (luachon == 4) {
+        tieuchi.append(menutha)
+      }
+    }
+    function remove_TieuChi(input) {
+      input.closest('p').remove()
+    }
+    function removeQuestion(input) {
+      input.closest('.item').remove()
+    }
+    function AddQuestion() {
+      var item = `<div class='item'>
+            <div class='row form-group'>
+              <div class='col-md-2'>
+                <div class="form-group row">
+    <label for="inputEmail3" class="col-md-4 col-form-label">Câu</label>
+    <div class="col-md-8">
+      <input type="text" class="form-control txtOrder" style='text-align:center'>
+    </div>
+  </div>
+              </div>
+              <div class='col-lg-7'>
+                <input type='text' class='form-control txtName'  />
+              </div>
+              <div class='col-lg-3'>
+                <select class="form-control kieunhap">
+                  <option value="1">Trắc nghiệm</option>
+                  <option value="2">Text</option>
+                  <option value="3">Hộp kiểm</option>
+                  <option value="4">Menu thả xuống</option>
+                </select>
+              </div>
+            </div>
+            <div class='row form-group'>
+              <div class='col-lg-12 cauhoi'>
+                <a href='javascript:void(0)' onclick='AddTieuChi(this)'  class='addTieuChi'>
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                </a>
+                <p><i class="fa fa-circle-thin" aria-hidden="true"></i><input type="text" class='tieuchi'/><i class="fa fa-times" onclick='remove_TieuChi(this)' aria-hidden="true"></i></p>
+              </div>
+            </div>
+            <div class='row form-group'>
+              <div class='col-lg-12' style="text-align: right;">
+                
+                <a href="javascript:void(0)" class='btnXoa' onclick="removeQuestion(this)"> <i class="fa fa-trash"></i> </a>
+               
+              </div>
+            </div>
+          </div>`
+
+      $('#content').append(item)
+      kieuNhap();
+
+    }
+  </script>
+</body>
+
+
+</html>
